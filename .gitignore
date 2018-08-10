@@ -1,0 +1,6 @@
+# Ignore all logfiles and tempfiles.
+/src/*
+/persist-data/db-data/*
+/persist-data/web-logs/*
+/persist-data/app-logs/*
+/persist-data/phpmyadmin-sessions/*

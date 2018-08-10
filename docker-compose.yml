@@ -1,0 +1,55 @@
+version: '3'
+services:
+  web:
+    image: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - "./src:/var/www/rails-app"
+      - "./container-config/nginx/rails.conf:/etc/nginx/conf.d/default.conf"
+      - "./container-config/nginx/nginx.conf:/etc/nginx/nginx.conf"
+      - "./persist-data/web-logs:/var/log/nginx"
+    depends_on:
+      - app
+
+  app:
+    build:
+      context: .
+      dockerfile: ./container-dockerfile/app-server/Dockerfile
+    volumes:
+      - ./src:/var/www/rails-app
+    environment:
+      - RAILS_DB_HOST=mariadb
+      - RAILS_DB_NAME=rails
+      - RAILS_DB_USER=rails
+      - RAILS_DB_PASSWORD=rails
+    expose:
+      - "3000"
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:latest
+    volumes:
+      - "./persist-data/db-data:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=mariadb
+      - MYSQL_DATABASE=rails
+      - MYSQL_USER=rails
+      - MYSQL_PASSWORD=rails
+    expose:
+      - "3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mariadb
+      - PMA_USER=root
+      - PMA_PASSWORD=mariadb
+    ports:
+       - 8000:80
+    volumes:
+       - "./persist-data/phpmyadmin-sessions:/sessions"
+    depends_on:
+      - mariadb
