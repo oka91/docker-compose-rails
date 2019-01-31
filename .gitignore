@@ -1,6 +1,12 @@
 # Ignore all logfiles and tempfiles.
-/src/*
 /persist-data/db-data/*
+!/persist-data/db-data/.keep
+
 /persist-data/web-logs/*
+!/persist-data/web-logs/.keep
+
 /persist-data/app-logs/*
+!/persist-data/app-logs/.keep
+
 /persist-data/phpmyadmin-sessions/*
+!/persist-data/phpmyadmin-sessions/.keep

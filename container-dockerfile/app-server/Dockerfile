@@ -1,4 +1,4 @@
-FROM oka9111/ruby-2.5.1-rails-5.2.0-base
+FROM oka9111/ruby-2.6.0-rails-5.2.2-base:latest
 
 # アプリケーションのデプロイ
 ENV APP_HOME /var/www/rails-app
