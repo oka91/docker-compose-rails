@@ -35,6 +35,7 @@ services:
     image: mariadb:latest
     volumes:
       - "./persist-data/db-data:/var/lib/mysql"
+      - "./container-config/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf"
     environment:
       - MYSQL_ROOT_PASSWORD=mariadb
       - MYSQL_DATABASE=rails
