@@ -13,19 +13,20 @@ default: &default
   adapter: mysql2
   encoding: utf8
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  database: <%= ENV['RAILS_DB_NAME'] %>
   username: <%= ENV['RAILS_DB_USER'] %>
   password: <%= ENV['RAILS_DB_PASSWORD'] %>
   host: mariadb
 
 development:
   <<: *default
+  database: rails_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
+  database: rails_test
 
 # As with config/secrets.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -48,3 +49,4 @@ test:
 #
 production:
   <<: *default
+  database: rails_production

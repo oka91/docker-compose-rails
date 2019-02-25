@@ -1,4 +1,6 @@
 # Ignore all logfiles and tempfiles.
+/src/
+
 /persist-data/db-data/*
 !/persist-data/db-data/.keep
 
