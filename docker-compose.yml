@@ -12,6 +12,23 @@ services:
       - "./persist-data/web-logs:/var/log/nginx"
     depends_on:
       - app
+    networks:
+      docker-network:
+        ipv4_address: 172.22.0.8
+
+  mariadb:
+    container_name: mariadb-container
+    image: mariadb:latest
+    volumes:
+      - "./persist-data/db-data:/var/lib/mysql"
+      - "./container-config/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf"
+    environment:
+      - MYSQL_ROOT_PASSWORD=mariadb
+    expose:
+      - "3306"
+    networks:
+      docker-network:
+        ipv4_address: 172.22.0.10
 
   app:
     container_name: rails-container
@@ -32,26 +49,21 @@ services:
       - mariadb
     command: >
       rails s -p 3000 -b '0.0.0.0'
+    networks:
+      docker-network:
+        ipv4_address: 172.22.0.2
 
-  mariadb:
-    container_name: mariadb-container
-    image: mariadb:latest
+  chrome:
+    container_name: chrome-container
+    image: selenium/standalone-chrome-debug:3.141.59-hafnium
     volumes:
-      - "./persist-data/db-data:/var/lib/mysql"
-      - "./container-config/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf"
-    environment:
-      - MYSQL_ROOT_PASSWORD=mariadb
-    expose:
-      - "3306"
-
-  # chrome:
-  #   container_name: chrome-container
-  #   image: selenium/standalone-chrome-debug:3.141.59-hafnium
-  #   volumes:
-  #     - /dev/shm:/dev/shm
-  #   ports:
-  #     - 4444:4444
-  #     - 5900:5900
+      - /dev/shm:/dev/shm
+    ports:
+      - 4444:4444
+      - 5900:5900
+    networks:
+      docker-network:
+        ipv4_address: 172.22.0.3
 
   phpmyadmin:
     container_name: phpmyadmin-container
@@ -65,5 +77,16 @@ services:
        - 8000:80
     volumes:
        - "./persist-data/phpmyadmin-sessions:/sessions"
+    networks:
+      docker-network:
+        ipv4_address: 172.22.0.4
     depends_on:
       - mariadb
+
+networks:
+  docker-network:
+    driver: bridge
+    ipam:
+     driver: default
+     config:
+       - subnet: 172.22.0.0/24
